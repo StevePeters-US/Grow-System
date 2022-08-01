@@ -18,6 +18,7 @@ lightOnTime = datetime.time(7, 0, 0)
 lightOffTime = datetime.time(20, 0, 0)
 lightOnDuration = 2
 
+GPIO.cleanup()
 GPIO.setmode(GPIO.BCM)
 
 GPIO.setup(LED_PIN, GPIO.OUT)
@@ -43,7 +44,6 @@ schedule.every().minute.at(":17").do(checkTime)
 
 def main():
     print('This is a server')
-    GPIO.cleanup()
 
     while True:
         schedule.run_pending()
