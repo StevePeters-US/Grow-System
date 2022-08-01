@@ -4,6 +4,7 @@ import schedule
 import time
 import datetime
 import atexit
+import Adafruit_DHT
 
 try:
     import RPi.GPIO as GPIO
@@ -13,6 +14,9 @@ except RuntimeError:
 LED_PIN = 23
 LIGHT_PIN = 25
 PUMP_PIN = 12
+
+DHT_SENSOR = Adafruit_DHT.DHT11
+DHT_PIN = 4
 
 lightOnTime = datetime.time(7, 0, 0)
 lightOffTime = datetime.time(20, 0, 0)
@@ -35,12 +39,21 @@ def checkTime():
 		GPIO.output(LIGHT_PIN, GPIO.LOW)
 		print("Light Off")
 
+def checkTemp():
+    humidity, temperature = Adafruit_DHT.read(DHT_SENSOR, DHT_PIN)
+    if humidity is not None and temperature is not None:
+        print("Temp={0:0.1f}C Humidity={1:0.1f}%".format(temperature, humidity))
+    else:
+        print("Sensor failure, check wiring")
+    time.sleep(3)
+
 def exit_handler():
     GPIO.cleanup()
 
 atexit.register(exit_handler)
 
 schedule.every().minute.at(":17").do(checkTime)
+schedule.every().second.do(checkTemp)
 
 def main():
     print('This is a server')
