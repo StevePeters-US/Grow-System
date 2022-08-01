@@ -45,7 +45,7 @@ def checkTemp():
         print("Temp={0:0.1f}C Humidity={1:0.1f}%".format(temperature, humidity))
     else:
         print("Sensor failure, check wiring")
-    time.sleep(3)
+    #time.sleep(3)
 
 def exit_handler():
     GPIO.cleanup()
