@@ -10,7 +10,7 @@ try:
 except RuntimeError:
     print("Error importing RPi.GPIO!  This is probably because you need superuser privileges.  You can achieve this by using 'sudo' to run your script")
 
-LED_PIN = 24
+LED_PIN = 23
 LIGHT_PIN = 25
 PUMP_PIN = 12
 
