@@ -42,8 +42,8 @@ atexit.register(exit_handler)
 schedule.every().minute.at(":17").do(checkTime)
 
 def main():
-    print("Hello World!")
     print('This is a server')
+    GPIO.cleanup()
 
     while True:
         schedule.run_pending()
