@@ -105,13 +105,6 @@ schedule.every().second.do(checkTemp)
 def init():
     print('This is a server')
 
-    while True:
-        schedule.run_pending()
-        GPIO.output(LED_PIN, GPIO.LOW)
-        time.sleep(1)
-        GPIO.output(LED_PIN, GPIO.HIGH)
-        time.sleep(1)
-
 if __name__ == "__main__":
     init()
 
