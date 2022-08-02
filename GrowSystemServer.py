@@ -5,6 +5,7 @@ import time
 import datetime
 import atexit
 import Adafruit_DHT
+import websockets
 
 try:
     import RPi.GPIO as GPIO
@@ -29,6 +30,12 @@ GPIO.setup(LED_PIN, GPIO.OUT)
 GPIO.setup(LIGHT_PIN, GPIO.OUT)
 GPIO.setup(PUMP_PIN, GPIO.OUT)
 
+def toggleLight(lightOn):
+    if lightOn:
+        GPIO.output(LED_PIN, GPIO.HIGH)
+    else:
+        GPIO.output(LED_PIN, GPIO.LOW)
+
 def checkTime():
 	now = datetime.datetime.now().time()
 	print("Checking Time. Current time = " + str(now))
@@ -47,15 +54,55 @@ def checkTemp():
         print("Sensor failure, check wiring")
     #time.sleep(3)
 
-def exit_handler():
+def OnExit():
+    print("Exiting Python server")
     GPIO.cleanup()
 
-atexit.register(exit_handler)
+async def echo(websocket, path):
+    print("A client just connected")
+    try:
+        async for message in websocket:
+
+            inJson = json.loads(message)
+            print(inJson["LED"])
+            
+            print("Received message from client: " + message)
+
+            if inJson["LED"] == "on":
+                toggleLight(True)
+            else:
+                toggleLight(False)
+
+            # if inJson["moveUp"] == True:
+            #     moveLeftMotor(1)
+            #     moveRightMotor(1)
+
+            # elif inJson["moveDown"] == True:
+            #     moveLeftMotor(-1)
+            #     moveRightMotor(-1)
+
+            # elif inJson["moveLeft"] == True:
+            #     moveLeftMotor(-1)
+            #     moveRightMotor(1)
+
+            # elif inJson["moveRight"] == True:
+            #     moveLeftMotor(1)
+            #     moveRightMotor(-1)
+
+            # else:
+            #     moveLeftMotor(0)
+            #     moveRightMotor(0)
+
+            await websocket.send("Pong: " + message)
+    except websockets.exceptions.ConnectionClosed as e:
+        print("A client just disconnected")
+
+atexit.register(OnExit)
 
 schedule.every().minute.at(":17").do(checkTime)
 schedule.every().second.do(checkTemp)
 
-def main():
+def init():
     print('This is a server')
 
     while True:
@@ -66,6 +113,12 @@ def main():
         time.sleep(1)
 
 if __name__ == "__main__":
-    main()
+    init()
+
+    start_server = websockets.serve(echo, "0.0.0.0", PORT)
+    print("Server listening on Port " + str(PORT))
+
+    asyncio.get_event_loop().run_until_complete(start_server)
+    asyncio.get_event_loop().run_forever()
 
 

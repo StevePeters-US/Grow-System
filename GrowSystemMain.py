@@ -41,3 +41,8 @@ if st.checkbox('Nutrient Data'):
 
     st.line_chart(nut_data)
 
+if st.button('Connect to server'):
+     st.write('Why hello there')
+else:
+     st.write('Goodbye')
+
