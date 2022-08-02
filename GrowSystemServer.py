@@ -19,6 +19,8 @@ PUMP_PIN = 12
 DHT_SENSOR = Adafruit_DHT.DHT11
 DHT_PIN = 4
 
+PORT = 7890
+
 lightOnTime = datetime.time(7, 0, 0)
 lightOffTime = datetime.time(20, 0, 0)
 lightOnDuration = 2
