@@ -6,6 +6,7 @@ import datetime
 import atexit
 import Adafruit_DHT
 import websockets
+import asyncio
 
 try:
     import RPi.GPIO as GPIO
