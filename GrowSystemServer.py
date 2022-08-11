@@ -58,7 +58,6 @@ def checkTemp():
         print("Temp={0:0.1f}C Humidity={1:0.1f}%".format(temperature, humidity))
     else:
         print("Sensor failure, check wiring")
-    #time.sleep(3)
 
 def OnExit():
     print("Exiting Python server")
@@ -76,8 +75,6 @@ async def echo(websocket, path):
             toggleLight(inJson["LED"])
 
             if inJson["Shutdown"] == True:
-                print("Closing server")
-                #ws_server.close()
                 exit()
 
             # if inJson["moveUp"] == True:
