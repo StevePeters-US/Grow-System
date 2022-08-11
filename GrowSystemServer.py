@@ -75,7 +75,7 @@ async def echo(websocket, path):
 
             toggleLight(inJson["LED"])
 
-            if inJson["Shutdown"] == "true":
+            if inJson["Shutdown"] == True:
                 print("Closing server")
                 ws_server.close()
                 exit()
