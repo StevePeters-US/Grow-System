@@ -23,6 +23,8 @@ DHT_PIN = 4
 
 PORT = 7890
 
+ws_server
+
 lightOnTime = datetime.time(7, 0, 0)
 lightOffTime = datetime.time(20, 0, 0)
 lightOnDuration = 2
@@ -63,7 +65,7 @@ def OnExit():
     GPIO.cleanup()
 
 async def echo(websocket, path):
-    print("A client just connected")
+    #print("A client just connected")
     try:
         async for message in websocket:
 
@@ -75,7 +77,7 @@ async def echo(websocket, path):
 
             if inJson["Shutdown"] == "true":
                 print("Closing server")
-                websocket.close()
+                ws_server.close()
                 exit()
 
             # if inJson["moveUp"] == True:
@@ -113,10 +115,10 @@ def init():
 if __name__ == "__main__":
     init()
 
-    start_server = websockets.serve(echo, "192.168.0.117", PORT)
+    ws_server = websockets.serve(echo, "192.168.0.117", PORT)
     print("Server listening on Port " + str(PORT))
 
-    asyncio.get_event_loop().run_until_complete(start_server)
+    asyncio.get_event_loop().run_until_complete(ws_server)
     asyncio.get_event_loop().run_forever()
 
 
