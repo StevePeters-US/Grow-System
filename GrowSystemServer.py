@@ -72,10 +72,11 @@ async def echo(websocket, path):
             
             print("Received message from client: " + message)
 
-            if inJson["LED"] == "on":
-                toggleLight(True)
-            else:
-                toggleLight(False)
+            toggleLight(inJson["LED"])
+            #if inJson["LED"] == "on":
+            #    toggleLight(True)
+            #else:
+            #    toggleLight(False)
 
             # if inJson["moveUp"] == True:
             #     moveLeftMotor(1)

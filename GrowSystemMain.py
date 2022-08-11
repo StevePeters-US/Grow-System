@@ -7,11 +7,14 @@ import numpy as np
 import websockets
 import asyncio
 import json
+import sys
+
+
 
 async def echo():
     async with websockets.connect("ws://192.168.0.117:7890") as websocket:
-        msg = '{ "LED" : "on"}'
-        jsonMsg = json.loads(msg)
+        msg = { "LED" : LEDState}
+        jsonMsg = json.dumps(msg)
         await websocket.send(jsonMsg)
         await websocket.recv()
 
@@ -55,7 +58,15 @@ if st.checkbox('Nutrient Data'):
 
     st.line_chart(nut_data)
 
-if st.button('Connect to server'):
-     st.write('Why hello there')
+LEDState = st.checkbox('LED')
+
+if LEDState:
+     st.write('on')
+     LEDState = "on"
 else:
-     st.write('Goodbye')
+     st.write('off')
+     LEDState = "on"
+
+
+if st.button('Shutdown'):
+     sys.exit("Exit button pressed")
