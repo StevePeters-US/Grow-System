@@ -11,7 +11,8 @@ import json
 async def echo():
     async with websockets.connect("ws://192.168.0.117:7890") as websocket:
         msg = '{ "LED" : "on"}'
-        await websocket.send(json.loads(msg))
+        jsonMsg = json.loads(msg)
+        await websocket.send(jsonMsg)
         await websocket.recv()
 
 asyncio.run(echo())

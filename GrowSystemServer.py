@@ -7,6 +7,7 @@ import atexit
 import Adafruit_DHT
 import websockets
 import asyncio
+import json
 
 try:
     import RPi.GPIO as GPIO
