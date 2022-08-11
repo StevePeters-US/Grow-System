@@ -77,6 +77,7 @@ async def echo(websocket, path):
             print("Received message from client: " + message)
 
             toggleLight(inJson["LED"])
+            
             if inJson["Shutdown"] == "true":
                 exitServer(websocket)
 
