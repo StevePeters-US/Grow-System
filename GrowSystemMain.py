@@ -11,60 +11,75 @@ import json
 import sys
 
 
+headerCon = st.container()
+dataCon = st.container()
+serverCon = st.container()
+
 LEDState = False
 ShutDownState  = False
 
+with headerCon:
+    st.title('Grow System Project')
+    st.text('Connect to remote pi\'s')
 
 
-st.write("Crop Type: Lettuce")
+with dataCon:
 
-if st.checkbox('Crop Data'):
     st.write("Crop Type: Lettuce")
-    st.write("Seed Source: Burpee")
-    st.write("Seed Batch: 43526")
 
-if st.checkbox('Hardware Description'):
-    st.write("Grow Space Type: Tent")
-    st.write("Grow Space Size: 4, 4, 6")
-    st.write("Light : Mars Hydro")
+    sel_col, disp_col = st.columns(2)
+    if sel_col.checkbox('Crop Data'):
+        disp_col.write("Crop Type: Lettuce")
+        disp_col.write("Seed Source: Burpee")
+        disp_col.write("Seed Batch: 43526")
 
-if st.checkbox("Events"):
-    df = pd.DataFrame({
-    'Date': [1, 2, 3, 4],
-    'Event Description': ['Started Seeds',
-    "Transferred seedlings to rockwool. Germination rate = 50%",
-        '30',
-        ' 40']
-    })
+    if sel_col.checkbox('Hardware Description'):
+        disp_col.write("Grow Space Type: Tent")
+        disp_col.write("Grow Space Size: 4, 4, 6")
+        disp_col.write("Light : Mars Hydro")
 
-    df
+    if sel_col.checkbox("Events"):
+        df = pd.DataFrame({
+        'Date': [1, 2, 3, 4],
+        'Event Description': ['Started Seeds',
+        "Transferred seedlings to rockwool. Germination rate = 50%",
+            '30',
+            ' 40']
+        })
 
-if st.checkbox('Environmental Data'):
-    environmental_data = pd.DataFrame(
-        np.random.randn(20, 4),
-        columns=['Air Temperature C', 'Water Temperature', 'Humidity', 'VPD'])
+        df
 
-    st.line_chart(environmental_data)
+    if sel_col.checkbox('Environmental Data'):
+        environmental_data = pd.DataFrame(
+            np.random.randn(20, 4),
+            columns=['Air Temperature C', 'Water Temperature', 'Humidity', 'VPD'])
 
-if st.checkbox('Nutrient Data'):
-    nut_data = pd.DataFrame(
-        np.random.randn(20, 4),
-        columns=['EC', 'Nitrogen', 'Potassium', 'Phosphorous'])
+        disp_col.line_chart(environmental_data)
 
-    st.line_chart(nut_data)
+    if sel_col.checkbox('Nutrient Data'):
+        nut_data = pd.DataFrame(
+            np.random.randn(20, 4),
+            columns=['EC', 'Nitrogen', 'Potassium', 'Phosphorous'])
 
-LEDState = st.checkbox('LED')
+        disp_col.line_chart(nut_data)
 
-if st.button('Shutdown'):
-     st.write("Exit button pressed")
-     ShutDownState = True
+    LEDState = st.checkbox('LED')
 
+    if st.button('Shutdown'):
+        st.write("Exit button pressed")
+        ShutDownState = True
 
-async def echo():
-    async with websockets.connect("ws://192.168.0.117:7890") as websocket:
-        msg = { "LED" : LEDState, "Shutdown" : ShutDownState}
-        jsonMsg = json.dumps(msg)
-        await websocket.send(jsonMsg)
-        await websocket.recv()
+with serverCon:
+    async def echo():
+        async with websockets.connect("ws://192.168.0.117:7890") as websocket:
+            msg = { "LED" : LEDState, "Shutdown" : ShutDownState}
+            jsonMsg = json.dumps(msg)
+            await websocket.send(jsonMsg)
+            try:
+                recmsg = await websocket.recv()
+                print(recmsg)
+            except:
+                print('reconnecting')
+                websocket = await websockets.connect("ws://192.168.0.117:7890")
 
-asyncio.run(echo())
+    asyncio.run(echo())
