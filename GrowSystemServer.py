@@ -23,7 +23,7 @@ DHT_PIN = 4
 
 PORT = 7890
 
-ws_server
+ws_server = websockets
 
 lightOnTime = datetime.time(7, 0, 0)
 lightOffTime = datetime.time(20, 0, 0)
