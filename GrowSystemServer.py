@@ -111,7 +111,7 @@ def init():
 if __name__ == "__main__":
     init()
 
-    start_server = websockets.serve(echo, "0.0.0.0", PORT)
+    start_server = websockets.serve(echo, "192.168.0.117", PORT)
     print("Server listening on Port " + str(PORT))
 
     asyncio.get_event_loop().run_until_complete(start_server)

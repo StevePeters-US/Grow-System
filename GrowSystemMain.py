@@ -3,6 +3,16 @@
 import streamlit as st
 import pandas as pd
 import numpy as np
+import websockets
+import asyncio
+
+async def hello():
+    async with websockets.connect("http://0.0.0.117:7890") as websocket:
+        await websocket.send("Hello world!")
+        await websocket.recv()
+
+asyncio.run(hello())
+
 
 st.write("Crop Type: Lettuce")
 
