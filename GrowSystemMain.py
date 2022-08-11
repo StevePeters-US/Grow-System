@@ -1,5 +1,6 @@
 # Uses Streamlit as a frontend
 
+from operator import truediv
 from unicodedata import name
 import streamlit as st
 import pandas as pd
@@ -10,15 +11,9 @@ import json
 import sys
 
 
+LEDState = False
+ShutDownState  = False
 
-async def echo():
-    async with websockets.connect("ws://192.168.0.117:7890") as websocket:
-        msg = { "LED" : LEDState}
-        jsonMsg = json.dumps(msg)
-        await websocket.send(jsonMsg)
-        await websocket.recv()
-
-asyncio.run(echo())
 
 
 st.write("Crop Type: Lettuce")
@@ -60,13 +55,16 @@ if st.checkbox('Nutrient Data'):
 
 LEDState = st.checkbox('LED')
 
-if LEDState:
-     st.write('on')
-     LEDState = "on"
-else:
-     st.write('off')
-     LEDState = "on"
-
-
 if st.button('Shutdown'):
-     sys.exit("Exit button pressed")
+     st.write("Exit button pressed")
+     ShutDownState = True
+
+
+async def echo():
+    async with websockets.connect("ws://192.168.0.117:7890") as websocket:
+        msg = { "LED" : LEDState, "Shutdown" : ShutDownState}
+        jsonMsg = json.dumps(msg)
+        await websocket.send(jsonMsg)
+        await websocket.recv()
+
+asyncio.run(echo())
