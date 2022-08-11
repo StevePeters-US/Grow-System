@@ -77,7 +77,7 @@ async def echo(websocket, path):
 
             if inJson["Shutdown"] == True:
                 print("Closing server")
-                ws_server.close()
+                #ws_server.close()
                 exit()
 
             # if inJson["moveUp"] == True:
