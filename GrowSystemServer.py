@@ -62,11 +62,6 @@ def OnExit():
     print("Exiting Python server")
     GPIO.cleanup()
 
-def exitServer(websocket):
-    print("Closing server")
-    websocket.close()
-    exit()
-
 async def echo(websocket, path):
     print("A client just connected")
     try:
@@ -77,9 +72,11 @@ async def echo(websocket, path):
             print("Received message from client: " + message)
 
             toggleLight(inJson["LED"])
-            
+
             if inJson["Shutdown"] == "true":
-                exitServer(websocket)
+                print("Closing server")
+                websocket.close()
+                exit()
 
             # if inJson["moveUp"] == True:
             #     moveLeftMotor(1)
