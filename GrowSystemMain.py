@@ -1,17 +1,20 @@
 # Uses Streamlit as a frontend
 
+from unicodedata import name
 import streamlit as st
 import pandas as pd
 import numpy as np
 import websockets
 import asyncio
+import json
 
-async def hello():
-    async with websockets.connect("http://0.0.0.117:7890") as websocket:
-        await websocket.send("Hello world!")
+async def echo():
+    async with websockets.connect("ws://192.168.0.117:7890") as websocket:
+        msg = '{ "LED" : "on"}'
+        await websocket.send(json.loads(msg))
         await websocket.recv()
 
-asyncio.run(hello())
+asyncio.run(echo())
 
 
 st.write("Crop Type: Lettuce")
@@ -55,4 +58,3 @@ if st.button('Connect to server'):
      st.write('Why hello there')
 else:
      st.write('Goodbye')
-
