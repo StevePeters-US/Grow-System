@@ -18,6 +18,8 @@ serverCon = st.container()
 LEDState = False
 ShutDownState  = False
 
+PORT = 7890
+
 with headerCon:
     st.title('Grow System Project')
     st.text('Connect to remote pi\'s')
@@ -69,17 +71,48 @@ with dataCon:
         st.write("Exit button pressed")
         ShutDownState = True
 
-with serverCon:
-    async def echo():
-        async with websockets.connect("ws://192.168.0.117:7890") as websocket:
-            msg = { "LED" : LEDState, "Shutdown" : ShutDownState}
-            jsonMsg = json.dumps(msg)
-            await websocket.send(jsonMsg)
-            try:
-                recmsg = await websocket.recv()
-                print(recmsg)
-            except:
-                print('reconnecting')
-                websocket = await websockets.connect("ws://192.168.0.117:7890")
+# with serverCon:
+#     async def echo():
+#         async with websockets.connect("ws://192.168.0.117:7890") as websocket:
+#             msg = { "LED" : LEDState, "Shutdown" : ShutDownState}
+#             jsonMsg = json.dumps(msg)
+#             await websocket.send(jsonMsg)
+#             try:
+#                 recmsg = await websocket.recv()
+#                 print(recmsg)
+#             except:
+#                 print('reconnecting')
+#                 websocket = await websockets.connect("ws://192.168.0.117:7890")
 
-    asyncio.run(echo())
+#     asyncio.run(echo())
+
+async def echo(websocket, path):
+    #print("A client just connected")
+    try:
+        async for message in websocket:
+
+            inJson = json.loads(message)
+            
+            print("Received message from client: " + message)
+
+           # toggleLight(inJson["LED"])
+
+            if inJson["Shutdown"] == True:
+                exit()
+
+            await websocket.send("Pong: " + message)
+    except websockets.exceptions.ConnectionClosed as e:
+        print("A client just disconnected")
+
+def init():
+    print('This is a server')
+
+if __name__ == "__main__":
+    init()
+
+    ws_server = websockets.serve(echo, "192.168.0.117", PORT)
+    print("Server listening on Port " + str(PORT))
+
+    asyncio.get_event_loop().run_until_complete(ws_server)
+    asyncio.get_event_loop().run_forever()
+
