@@ -15,6 +15,6 @@ async def echo():
             print(recmsg)
         except:
             print('reconnecting')
-            websocket = await websockets.connect("ws://192.168.0.117:7890")
+            websocket = await websockets.connect("ws://0.0.0.0:7890")
 
 asyncio.run(echo())
