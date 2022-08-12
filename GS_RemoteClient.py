@@ -6,7 +6,7 @@ LEDState = False
 ShutDownState  = False
 
 async def echo():
-    async with websockets.connect("ws://192.168.0.117:7890") as websocket:
+    async with websockets.connect("ws://0.0.0.0:7890") as websocket:
         msg = { "LED" : LEDState, "Shutdown" : ShutDownState}
         jsonMsg = json.dumps(msg)
         await websocket.send(jsonMsg)
