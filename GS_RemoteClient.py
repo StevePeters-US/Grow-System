@@ -6,7 +6,7 @@ LEDState = False
 ShutDownState  = False
 
 async def echo():
-    async with websockets.connect("ws://localhost:7891") as websocket:
+    async with websockets.connect("ws://localhost:7892") as websocket:
         msg = { "LED" : LEDState, "Shutdown" : ShutDownState}
         jsonMsg = json.dumps(msg)
         await websocket.send(jsonMsg)
@@ -15,6 +15,6 @@ async def echo():
             print(recmsg)
         except:
             print('reconnecting')
-            websocket = await websockets.connect("ws://localhost:7891")
+            #websocket = await websockets.connect("ws://localhost:7891")
 
 asyncio.run(echo())

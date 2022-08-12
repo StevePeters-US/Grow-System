@@ -18,7 +18,7 @@ serverCon = st.container()
 LEDState = False
 ShutDownState  = False
 
-PORT = 7891
+PORT = 7892
 
 with headerCon:
     st.title('Grow System Project')
@@ -70,6 +70,7 @@ with dataCon:
     if st.button('Shutdown'):
         st.write("Exit button pressed")
         ShutDownState = True
+        exit()
 
 # with serverCon:
 #     async def echo():
