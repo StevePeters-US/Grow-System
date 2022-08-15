@@ -18,7 +18,7 @@ serverCon = st.container()
 LEDState = False
 ShutDownState  = False
 
-PORT = 7892
+PORT = 7896
 
 with headerCon:
     st.title('Grow System Project')
@@ -105,18 +105,15 @@ async def echo(websocket, path):
     except websockets.exceptions.ConnectionClosed as e:
         print("A client just disconnected")
 
+
 async def main():
     async with websockets.serve(echo, "localhost", PORT):
         print("Server listening on Port " + str(PORT))
         await asyncio.Future()  # run forever
 
-
-def init():
+if __name__ == "__main__":
     print('This is a server')
     asyncio.run(main())
-
-if __name__ == "__main__":
-    init()
 
     # ws_server = websockets.serve(echo, "0.0.0.0", PORT)
 
